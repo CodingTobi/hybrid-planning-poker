@@ -23,18 +23,23 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
+                        <Link href="/table" className="text-gray-700 hover:text-blue-600">
+                            table
+                        </Link>
+                    </li>
+                    <li>
                         <Link href="/test" className="text-gray-700 hover:text-blue-600">
                             Test2
                         </Link>
                     </li>
                     <li>
-                        <Link href="/test" className="text-gray-700 hover:text-blue-600">
-                            Test3
+                        <Link href="/placeCard" className="text-gray-700 hover:text-blue-600">
+                            Place Card
                         </Link>
                     </li>
                     <li>
-                        <Link href="/test" className="text-gray-700 hover:text-blue-600">
-                            Test4
+                        <Link href="/papers" className="text-gray-700 hover:text-blue-600">
+                            Link to papers
                         </Link>
                     </li>
                 </ul>
