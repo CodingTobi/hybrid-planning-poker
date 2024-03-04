@@ -1,8 +1,18 @@
 "use client";
 
-import QrCode from "@/components/QrCode";
+import socket from '@/utils/socket';
+import { useEffect } from 'react';
+import { useSearchParams } from "next/navigation";
+
 
 export default function Test() {
+    const cardId = useSearchParams().get("id");
+
+    useEffect(() => {
+        if (cardId) {
+            socket.emit('placeCard', cardId, 'room1', 'user1');
+        }
+    }, [cardId]);
 
     return (
         <div className="bg-slate-400 h-screen">

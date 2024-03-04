@@ -2,6 +2,7 @@
 
 import React, { use, useEffect, useState } from 'react';
 import Card from './Card';
+import { socket } from '@/utils/socket';
 
 interface CardData {
     cardName: string;
@@ -28,11 +29,11 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
         if (document.activeElement) {
             const activeElementIndex = items.indexOf(document.activeElement as HTMLElement);
             if (activeElementIndex === -1) {
-                
+
             }
 
             if (event.key === 'ArrowLeft') {
-                console.log('ArrowLeft', activeElementIndex);           
+                console.log('ArrowLeft', activeElementIndex);
                 items[activeElementIndex - 1]?.focus();
                 event.preventDefault();
             } else if (event.key === 'ArrowRight') {
@@ -45,7 +46,8 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
     };
 
     useEffect(() => {
-        //TODO: socket.io emit selectedCard
+        //TODO was passiert bei reload? soll karte ausgewählt bleiben?
+        socket.emit('placeCard', selectedCard, 'room1', 'user1'); //TODO get room and user from context
     }, [selectedCard]);
 
     return (

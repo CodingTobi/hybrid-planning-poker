@@ -15,16 +15,36 @@ const io = new Server(server, {
 })
 
 
-const serverState: ServerState = {
+let serverState: ServerState = {
     rooms: {}
 };
+
+serverState.rooms['room1'] = {
+    cards: [] // Initialize the 'cards' array if it is undefined
+} as unknown as Room;
 
 const handleCardSelect = (card: Card, roomId: string) => {
     console.log('handleCardSelect', card, roomId)
     if (serverState.rooms[roomId]) {
-        serverState.rooms[roomId].cards.push(card)
-        io.to(roomId).emit('cardSelected', card)
-    } else return null;
+        const existingCardIndex = serverState.rooms[roomId].cards.findIndex(c => c.placedBy === card.placedBy)
+        if (existingCardIndex !== -1) {
+            // user already placed a card, update it
+            if (card.id === serverState.rooms[roomId].cards[existingCardIndex].id) return; // existing card is the same as new, do nothing
+            if (card.id === null || card.id === '') {
+                // remove the card from the list
+                serverState.rooms[roomId].cards.splice(existingCardIndex, 1);
+            } else {
+                // update the card
+                serverState.rooms[roomId].cards[existingCardIndex] = card;
+            }
+        } else {
+            // user has not placed a card yet, add it
+            if (card.id === null || card.id === '') return; // no card to add
+            serverState.rooms[roomId].cards.push(card);
+        }
+        io.to(roomId).emit('cardsUpdated', serverState.rooms[roomId].cards);
+        console.log('cardsUpdated', serverState.rooms[roomId].cards);
+    } 
 }
 
 
