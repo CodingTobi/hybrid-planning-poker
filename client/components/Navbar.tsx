@@ -8,9 +8,15 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="fixed top-4 inset-x-0 mx-auto w-fit z-50 bg-slate-500/30 backdrop-blur-lg py-2 px-4 rounded-md md:rounded-full transition duration-500 ease-in-out">
+        <nav className="fixed top-4 inset-x-0 mx-auto w-fit z-50 bg-slate-500/30 
+                        backdrop-blur-lg py-2 px-4 rounded-md md:rounded-full transition 
+                        duration-500 ease-in-out"
+            onClick={() => setIsOpen(!isOpen)}
+        >
             <div className="flex flex-col justify-between items-center">
-                <div className="text-xl font-bold">MySite</div>
+                <div className="text-xl font-bold">
+                    MySite
+                </div>
                 <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
                     <FcExpand className={`transition ${isOpen ? 'rotate-180' : ''}`} />
                 </div>
@@ -33,13 +39,18 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/placeCard" className="text-gray-700 hover:text-blue-600">
+                        <Link href="/placeCard?id=card_0" className="text-gray-700 hover:text-blue-600">
                             Place Card
                         </Link>
                     </li>
                     <li>
                         <Link href="/papers" className="text-gray-700 hover:text-blue-600">
                             Link to papers
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/testReg" className="text-gray-700 hover:text-blue-600">
+                            test register
                         </Link>
                     </li>
                 </ul>

@@ -2,22 +2,51 @@
 
 import socket from '@/utils/socket';
 import { useEffect } from 'react';
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from '@/contexts/AuthContext';
 
 
 export default function Test() {
+    const authContext = useAuth();
+    const { isAuthenticated, isLoading, login, roomId, userId } = authContext || {};
     const cardId = useSearchParams().get("id");
+    const router = useRouter();
 
     useEffect(() => {
-        if (cardId) {
-            socket.emit('placeCard', cardId, 'room1', 'user1');
+        console.log('isAuthenticated', isAuthenticated, 'isLoading', isLoading, 'roomId', roomId, 'userId', userId);
+        if (isLoading !== undefined && !isAuthenticated) {
+            try {
+                login();
+            } catch (error) {
+                console.error('Login failed! Please ask for the QR Code to login.', error);
+            }
+        } else if (isAuthenticated && cardId) {
+            socket.emit('placeCard', cardId, roomId, userId);
         }
-    }, [cardId]);
+    }, [cardId, isAuthenticated, isLoading, login, roomId, userId]);
 
-    return (
-        <div className="bg-slate-400 h-screen">
-            <h1>Hybrid Planning Poker</h1>
-            <p>A hybrid planning poker app for remote teams</p>
-        </div>
-    );
+    useEffect(() => {
+        if (!isLoading)
+            router.refresh();
+    }, [isLoading, router]);
+
+    if (isLoading) {
+        return (
+            <div className="mt-24 text-center">
+                <h1>Loading...</h1>
+            </div>
+        );
+    } else if (!isAuthenticated) {
+        return (
+            <div className="mt-24 text-center">
+                <h1>Login failed! Please ask for the QR Code to login.</h1>
+            </div>
+        );
+    } else {
+        return (
+            <div className="mt-24 text-center">
+                <h1>Successfully placed card in room {roomId}</h1>
+            </div>
+        );
+    }
 }
