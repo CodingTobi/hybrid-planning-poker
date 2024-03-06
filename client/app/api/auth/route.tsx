@@ -66,6 +66,7 @@ export async function GET(req: NextRequest) {
         });
     } catch (error) {
         // Token is not valid or expired
+        console.error(error);
         return new NextResponse(JSON.stringify({ success: false, message: 'GET: Not logged in' }), {
             status: 401,
             headers: {

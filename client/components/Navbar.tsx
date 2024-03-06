@@ -29,6 +29,11 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
+                        <Link href="/new" className="text-gray-700 hover:text-blue-600">
+                            new
+                        </Link>
+                    </li>
+                    <li>
                         <Link href="/table" className="text-gray-700 hover:text-blue-600">
                             table
                         </Link>
