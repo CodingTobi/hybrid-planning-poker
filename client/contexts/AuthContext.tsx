@@ -10,6 +10,7 @@ interface AuthContextProps {
   isLoading: boolean;
   login: () => Promise<void>;
   register: (roomId: string, isRoomOwner: boolean) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>(null!);
@@ -47,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         body: JSON.stringify({ roomId: roomId, isRoomOwner: isRoomOwner})
       }).then((res) => res.json())
         .then((data) => {
+          console.log("test");
           setUserId(data.userId);
           setRoomId(data.roomId);
           setRoomOwner(data.isRoomOwner);
@@ -58,6 +60,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('Login failed', error);
     }
   }
+
+  const logout = async () => {
+    console.log('authcontext:logout');
+    setLoading(true);
+    clearData();
+    try {
+      fetch('/api/auth/signout', { method: "DELETE" })
+        .then((res) => {
+          if (res.status != 200) 
+            throw new Error(`Status code: ${res.status} ${res.statusText}`);
+        });
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+    setLoading(false);
+  }
+
   const clearData = () => {
     setUserId(null);
     setRoomId(null);
@@ -67,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthContext.Provider value={{ 
         userId, roomId, isAuthenticated: !!userId,
-        isRoomOwner, isLoading, login, register
+        isRoomOwner, isLoading, login, register, logout
     }}>
       {children}
     </AuthContext.Provider>

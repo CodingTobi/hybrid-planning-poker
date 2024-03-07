@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
+import { cookies } from 'next/headers';
 
 function getSecret() {
     const secret = process.env.JWT_SECRET;
@@ -20,6 +21,7 @@ export async function POST(req: NextRequest) {
         if (token) { // token present, verify it
             const decoded = jwt.verify(token.value, getSecret());
             if (typeof decoded === 'string') {
+                cookies().delete('token') // remove the token from the client
                 throw new Error('Invalid token');
             }
             return new NextResponse(JSON.stringify({ success: true, userId: decoded.userId, roomId: decoded.roomId }), {
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-
+    console.debug("SRV:DBG - api/auth/GET");
     const token = req.cookies.get('token');
     // Verify the token
     try {
@@ -66,7 +68,8 @@ export async function GET(req: NextRequest) {
         });
     } catch (error) {
         // Token is not valid or expired
-        console.error(error);
+        console.error("API ERROR (GET): ", error);
+        cookies().delete('token') // remove the token from the client
         return new NextResponse(JSON.stringify({ success: false, message: 'GET: Not logged in' }), {
             status: 401,
             headers: {

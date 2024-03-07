@@ -46,6 +46,8 @@ export default function Test() {
         return (
             <div className="mt-24 text-center">
                 <h1>Successfully placed card in room {roomId}</h1>
+                <h1> You can close this tab now.</h1>
+                <h1>To change the card simply place another card on the reader</h1>
             </div>
         );
     }
