@@ -3,6 +3,7 @@
 import React, { use, useEffect, useState } from 'react';
 import Card from './Card';
 import { socket } from '@/utils/socket';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CardData {
     cardName: string;
@@ -16,10 +17,23 @@ interface CardDeckProps {
 
 const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
+    const authContext = useAuth();
+    const { isAuthenticated, isLoading, login, roomId, userId } = authContext || {};
 
     const handleCardSelect = (cardName: string) => {
         setSelectedCard(cardName);
     };
+
+    useEffect(() => {
+        console.log('isAuthenticated', isAuthenticated, 'isLoading', isLoading, 'roomId', roomId, 'userId', userId);
+        if (!isAuthenticated) {
+            try {
+                login();
+            } catch (error) {
+                console.error('Login failed! Please ask for the QR Code to login.', error);
+            }
+        }
+    }, []);
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         const items: HTMLElement[] = Array.from(document.querySelectorAll('.item'));
@@ -47,7 +61,11 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
 
     useEffect(() => {
         //TODO was passiert bei reload? soll karte ausgewählt bleiben?
-        socket.emit('placeCard', selectedCard, 'room1', 'user1'); //TODO get room and user from context
+        if (roomId && userId ) {
+            socket.emit('placeCard', selectedCard, roomId, userId); //TODO get room and user from context
+        } else {
+            console.error('No roomId found');
+        }
     }, [selectedCard]);
 
     return (
