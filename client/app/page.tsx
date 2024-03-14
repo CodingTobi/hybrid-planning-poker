@@ -5,12 +5,14 @@ import QrCode from '@/components/QrCode';
 import Background_cards_fade from "@/public/hpp_stock_cards-002-Edit.png";
 import Background_cards_fade2 from "@/public/hpp_stock_cards-004.jpg";
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const reference_cardanimation = "https://codepen.io/candroo/pen/NvJZNx";
 
 export default function Home() {
 
   const [spread, setSpread] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="h-screen flex flex-col items-center relative overflow-hidden scroll-m-0 overscroll-auto">
@@ -72,7 +74,7 @@ export default function Home() {
                 </span>
               </div>
               <div className='h-full flex flex-col items-center justify-center gap-2'>
-                <button className='p-1 bg-red-600 rounded-md' onClick={() =>  push }>Test1 </button>
+                <button className='p-1 bg-red-600 rounded-md' onClick={() =>  router.push("/login") }>Test1 </button>
                 <button className='p-1 bg-red-600 rounded-md'>Test2 </button>
               </div>
               <div className='card__face card__face--btm'>
