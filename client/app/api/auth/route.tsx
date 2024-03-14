@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
                 cookies().delete('token') // remove the token from the client
                 throw new Error('Invalid token');
             }
-            return new NextResponse(JSON.stringify({ success: true, userId: decoded.userId, roomId: decoded.roomId }), {
+            return new NextResponse(JSON.stringify({ success: true, userId: decoded.userId, roomId: decoded.roomId, isRoomOwner: decoded.isRoomOwner }), {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
             });
         } else { // no token present, create a new one
             const userId = nanoid();
-            const newToken = jwt.sign({ userId: userId, roomId: body.roomId }, getSecret(), { expiresIn: '8h' });
-            const response = new NextResponse(JSON.stringify({ success: true, userId:userId, roomId:body.roomId }), {
+            const newToken = jwt.sign({ userId: userId, roomId: body.roomId, isRoomOwner: body.isRoomOwner }, getSecret(), { expiresIn: '8h' });
+            const response = new NextResponse(JSON.stringify({ success: true, userId:userId, roomId:body.roomId, isRoomOwner: body.isRoomOwner }), {
                 status: 200, // OK
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
         if (typeof decoded === 'string') {
             throw new Error(`Invalid token (${decoded})`);
         }
-        return new NextResponse(JSON.stringify({ success: true, userId: decoded.userId, roomId: decoded.roomId }), {
+        return new NextResponse(JSON.stringify({ success: true, userId: decoded.userId, roomId: decoded.roomId, isRoomOwner: decoded.isRoomOwner }), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json',
