@@ -55,6 +55,7 @@ const handleCardSelect = (card: Card, roomId: string) => {
 
 io.on('connection', (socket) => {
     console.debug('VEB: a user connected')
+    socket.emit('runtimeId', runtimeId);
 
     socket.on('createRoom', (roomId: string, userId: string, roomName?: string) => {
         console.log('LOG:createRoom - roomId:', roomId, "userId:", userId)

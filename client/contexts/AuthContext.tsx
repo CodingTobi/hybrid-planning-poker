@@ -1,6 +1,8 @@
 "use client"
 
-import { createContext, useContext, useState } from 'react';
+import socket from '@/utils/socket';
+import { useRouter } from 'next/navigation';
+import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthContextProps {
   userId: string | null;
@@ -20,7 +22,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [isRoomOwner, setRoomOwner] = useState<boolean>(false);
+  const [serverRuntimeId, setServerRuntimeId] = useState<string | null>(null);
+  const [runtimeId, setRuntimeId] = useState<string | null>(null);
 
+  const router = useRouter();
+
+  socket.on("runtimeId", (id: string) => {
+    console.log("LOG:runtimeId - server:", id);
+    setServerRuntimeId(id);
+  });
+
+  useEffect(() => {
+    console.log("LOG:runtimeId - runtimeId changed - server:", serverRuntimeId, "runtime:", runtimeId);
+    if (runtimeId && serverRuntimeId && runtimeId !== serverRuntimeId) {
+      logout();
+      console.error("Logged out due to server restart. Server runtimeId does not match client runtimeId.");
+      router.push('/login');
+    }
+  }, [serverRuntimeId, runtimeId]);
 
   const login = async () => {
     console.log('authcontext:login');
@@ -30,7 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .then((data) => {
           setUserId(data.userId);
           setRoomId(data.roomId);
-          setRoomOwner(data.isRoomOwner); 
+          setRoomOwner(data.isRoomOwner);
+          setRuntimeId(data.runtimeId);
           setLoading(false);
         });
     } catch (error) {
@@ -45,13 +65,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       fetch('/api/auth', {
         method: "POST",
-        body: JSON.stringify({ roomId: roomId, isRoomOwner: isRoomOwner})
+        body: JSON.stringify({ roomId: roomId, isRoomOwner: isRoomOwner, runtimeId: serverRuntimeId})
       }).then((res) => res.json())
         .then((data) => {
           console.log("test");
           setUserId(data.userId);
           setRoomId(data.roomId);
           setRoomOwner(data.isRoomOwner);
+          setRuntimeId(data.runtimeId);
           setLoading(false);
         });
     } catch (error) {
@@ -68,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       fetch('/api/auth/signout', { method: "DELETE" })
         .then((res) => {
-          if (res.status != 200) 
+          if (res.status != 200)
             throw new Error(`Status code: ${res.status} ${res.statusText}`);
         });
     } catch (error) {
@@ -81,12 +102,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUserId(null);
     setRoomId(null);
     setRoomOwner(false);
+    setRuntimeId(null);
   }
 
   return (
-    <AuthContext.Provider value={{ 
-        userId, roomId, isAuthenticated: !!userId,
-        isRoomOwner, isLoading, login, register, logout
+    <AuthContext.Provider value={{
+      userId, roomId, isAuthenticated: !!userId,
+      isRoomOwner, isLoading, login, register, logout
     }}>
       {children}
     </AuthContext.Provider>
