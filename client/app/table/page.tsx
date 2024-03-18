@@ -41,6 +41,11 @@ const SomePage: NextPage = () => {
     router.refresh();
   });
 
+  socket.on('cardsVisible', (reveal: boolean) => {
+    console.log('cardsVisible', reveal);
+    setRevealCards(reveal);
+  });
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center h-screen bg-slate-200 relative">
 
@@ -48,7 +53,11 @@ const SomePage: NextPage = () => {
       <QrCode link={`http://192.168.2.159:3000/login?id=${roomId}`} buttonText='QR' qrDialogTitle='Join Room' className=' bg-white rounded-md p-1 inset-2 absolut right-2 top-2' />
       <div className="w-1/2 h-1/2 bg-white shadow-lg border-2 border-gray-300 rounded-2xl overflow-hidden relative">
         {(isRoomOwner) ?
-          <button onClick={() => setRevealCards(!revealCards)} className='absolute bottom-0 left-[46%] bg-white rounded-md p-1 border border-black z-10'>Reveal</button> : ""
+          <button
+            onClick={() => {socket.emit("revealCards", !revealCards, roomId)}}
+            className='absolute bottom-0 left-[46%] bg-white rounded-md p-1 border border-black z-10'>
+            {(revealCards) ? "Hide" : "Reveal"}
+          </button> : ""
         }
         <Image src={textureImage} alt="Texture" width={4096} height={4096} className="opacity-50" priority />
         <div className='absolute left-7 right-7 top-7 flex flex-wrap justify-between'>

@@ -76,7 +76,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on('joinRoom', (roomId: string) => {
-
         if (!serverState.rooms[roomId]) {
             socket.emit('roomNotFound', roomId) 
             console.debug('DBG:joinRoom - roomNotFound roomId:', roomId)
@@ -98,6 +97,16 @@ io.on('connection', (socket) => {
         }
         handleCardSelect(card, roomId)
     });
+
+    socket.on('revealCards', (reveal: boolean, roomId: string) => {
+        console.debug('DBG:revealCards - roomId:', roomId)
+        if (serverState.rooms[roomId]) {
+            serverState.rooms[roomId].cardsVisible = reveal;
+            io.to(roomId).emit('cardsVisible', serverState.rooms[roomId].cardsVisible);
+        } else {
+            console.error('ERR:revealCards - room not found - roomId:', roomId);
+        }
+    })
 
     socket.on('leaveRoom', (roomId: string) => {
         console.log('leaveRoom', roomId)
