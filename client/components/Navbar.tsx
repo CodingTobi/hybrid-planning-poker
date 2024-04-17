@@ -8,7 +8,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="fixed top-4 inset-x-0 mx-auto w-fit z-50 bg-slate-500/30 
+        <nav className="nav1 fixed top-4 inset-x-0 mx-auto w-fit z-50 bg-slate-500/30 
                         backdrop-blur-lg py-2 px-4 rounded-md md:rounded-full transition 
                         duration-500 ease-in-out"
             onClick={() => setIsOpen(!isOpen)}
