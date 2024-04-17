@@ -15,7 +15,9 @@ const Navbar = () => {
         >
             <div className="flex flex-col justify-between items-center">
                 <div className="text-xl font-bold">
-                    MySite
+                    <Link href="/">
+                        MySite
+                    </Link>
                 </div>
                 <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
                     <FcExpand className={`transition ${isOpen ? 'rotate-180' : ''}`} />
@@ -43,26 +45,21 @@ const Navbar = () => {
                             table
                         </Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link href="/test" className="text-gray-700 hover:text-blue-600">
                             Test2
                         </Link>
-                    </li>
+                    </li> */}
                     <li>
                         <Link href="/placeCard?id=card_0" className="text-gray-700 hover:text-blue-600">
                             Place Card
                         </Link>
                     </li>
-                    <li>
-                        <Link href="/papers" className="text-gray-700 hover:text-blue-600">
-                            Link to papers
-                        </Link>
-                    </li>
-                    <li>
+                    {/* <li>
                         <Link href="/testReg" className="text-gray-700 hover:text-blue-600">
                             test register
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
         </nav>

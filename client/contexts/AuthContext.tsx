@@ -6,12 +6,13 @@ import { createContext, use, useContext, useEffect, useState } from 'react';
 
 interface AuthContextProps {
   userId: string | null;
+  userName: string | null;
   roomId: string | null;
   isAuthenticated: boolean;
   isRoomOwner: boolean;
   isLoading: boolean;
   login: () => Promise<void>;
-  register: (roomId: string, isRoomOwner: boolean) => Promise<void>;
+  register: (roomId: string, isRoomOwner: boolean, userName: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextProps>(null!);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [isRoomOwner, setRoomOwner] = useState<boolean>(false);
   const [serverRuntimeId, setServerRuntimeId] = useState<string | null>(null);
@@ -48,6 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .then((res) => res.json())
         .then((data) => {
           setUserId(data.userId);
+          setUserName(data.userName);
           setRoomId(data.roomId);
           setRoomOwner(data.isRoomOwner);
           setRuntimeId(data.runtimeId);
@@ -60,16 +63,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const register = async (roomId: string, isRoomOwner: boolean) => {
+  const register = async (roomId: string, isRoomOwner: boolean, userName: string) => {
     console.log('authcontext:register', roomId, isRoomOwner);
     try {
       fetch('/api/auth', {
         method: "POST",
-        body: JSON.stringify({ roomId: roomId, isRoomOwner: isRoomOwner, runtimeId: serverRuntimeId})
+        body: JSON.stringify({ roomId: roomId, userName: userName, isRoomOwner: isRoomOwner, runtimeId: serverRuntimeId})
       }).then((res) => res.json())
         .then((data) => {
           console.log("test");
           setUserId(data.userId);
+          setUserName(data.userName);
           setRoomId(data.roomId);
           setRoomOwner(data.isRoomOwner);
           setRuntimeId(data.runtimeId);
@@ -100,6 +104,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearData = () => {
     setUserId(null);
+    setUserName(null);
     setRoomId(null);
     setRoomOwner(false);
     setRuntimeId(null);
@@ -107,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{
-      userId, roomId, isAuthenticated: !!userId,
+      userId, userName, roomId, isAuthenticated: !!userId,
       isRoomOwner, isLoading, login, register, logout
     }}>
       {children}

@@ -18,14 +18,14 @@ interface CardDeckProps {
 const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
     const authContext = useAuth();
-    const { isAuthenticated, isLoading, login, roomId, userId } = authContext || {};
+    const { isAuthenticated, isLoading, login, roomId, userId, userName } = authContext || {};
 
     const handleCardSelect = (cardName: string) => {
         setSelectedCard(cardName);
     };
 
     useEffect(() => {
-        console.log('isAuthenticated', isAuthenticated, 'isLoading', isLoading, 'roomId', roomId, 'userId', userId);
+        console.log('isAuthenticated', isAuthenticated, 'isLoading', isLoading, 'roomId', roomId, 'userId', userId, 'userName', userName);
         if (!isAuthenticated) {
             try {
                 login();
@@ -62,7 +62,7 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
     useEffect(() => {
         //TODO was passiert bei reload? soll karte ausgewählt bleiben?
         if (roomId && userId ) {
-            socket.emit('placeCard', selectedCard, roomId, userId); //TODO get room and user from context
+            socket.emit('placeCard', selectedCard, roomId, userId, userName); //TODO get room and user from context
         } else {
             console.error('No roomId found');
         }

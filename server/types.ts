@@ -1,6 +1,7 @@
 export interface Card {
     id: string;
     placedBy: string;
+    userName: string;
 }
 
 export interface Room {
@@ -8,6 +9,7 @@ export interface Room {
     name?: string;
     created: Date;
     roomOwner: string;
+    roomOwnerName: string;
     cards: Card[];
     cardsVisible: boolean;
 }

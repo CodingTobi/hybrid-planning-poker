@@ -14,10 +14,10 @@ import { useRouter } from 'next/navigation';
 
 const SomePage: NextPage = () => {
   const authContext = useAuth();
-  const { isAuthenticated, isRoomOwner, isLoading, login, roomId, userId } = authContext || {};
+  const { isAuthenticated, isRoomOwner, isLoading, login, roomId} = authContext || {};
   const router = useRouter();
 
-  const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1' }]);
+  const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1'}]);
   const [revealCards, setRevealCards] = useState(false);
   login();
 
@@ -35,7 +35,7 @@ const SomePage: NextPage = () => {
     router.push('/login');
   }
 
-  socket.on('cardsUpdated', (cards: { id: string, placedBy: string }[]) => {
+  socket.on('cardsUpdated', (cards: { id: string, placedBy: string, userName: string }[]) => {
     console.log('cardsUpdated', cards);
     setCards(cards);
     router.refresh();
@@ -61,11 +61,10 @@ const SomePage: NextPage = () => {
         }
         <Image src={textureImage} alt="Texture" width={4096} height={4096} className="opacity-50" priority />
         <div className='absolute left-7 right-7 top-7 flex flex-wrap justify-between'>
-
           {/* IDEE mit filter eigene carte ausblenden und separat anzeigen alternativ anderweillig markieren*/}
           {cards.map((item, index) =>
             <div className=''>
-              <p className='text-center'>{item.placedBy?.slice(0, 6)}</p>
+              <p className='text-center'>{item.userName || item.placedBy?.slice(0, 6)}</p>
               <Card
                 className='mt-0'
                 cardName={item.id}

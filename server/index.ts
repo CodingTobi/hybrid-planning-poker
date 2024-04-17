@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
     console.debug('VEB: a user connected')
     socket.emit('runtimeId', runtimeId);
 
-    socket.on('createRoom', (roomId: string, userId: string, roomName?: string) => {
+    socket.on('createRoom', (roomId: string, userId: string, ownerName: string, roomName?: string) => {
         console.log('LOG:createRoom - roomId:', roomId, "userId:", userId)
         if (serverState.rooms[roomId]) {
             socket.emit('roomExists', roomId);
@@ -68,6 +68,7 @@ io.on('connection', (socket) => {
                 name: roomName,
                 created: new Date(),
                 roomOwner: userId,
+                roomOwnerName: ownerName,
                 cards: [],
                 cardsVisible: false
             }
@@ -86,15 +87,19 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('cardsUpdated', serverState.rooms[roomId].cards);
             console.debug('DBG:joinRoom - roomJoined roomId:', roomId)
         }
+
+
+
     })
 
 // TODO save runtimeId in token and check if it matches 
 // (when server restarts placing a card will not work anymore because the room does not exist anymore)
-    socket.on("placeCard", (cardName: string, roomId: string, userId: string) => {
-        console.debug('DBG:placeCard - cardName:', cardName, "roomId:", roomId, "userId:", userId)
+    socket.on("placeCard", (cardName: string, roomId: string, userId: string, uname: string) => {
+        console.debug('DBG:placeCard - cardName:', cardName, "roomId:", roomId, "userId:", userId , "uname:", uname)
         const card: Card = {
             id: cardName,
-            placedBy: userId
+            placedBy: userId,
+            userName : uname
         }
         handleCardSelect(card, roomId)
     });
