@@ -1,6 +1,6 @@
 "use client"
 
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './Card';
 import { socket } from '@/utils/socket';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,9 +13,10 @@ interface CardData {
 interface CardDeckProps {
     className?: string;
     cards: CardData[];
+    active: boolean; 
 }
 
-const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
+const CardDeck: React.FC<CardDeckProps> = ({ cards, className, active }) => {
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
     const authContext = useAuth();
     const { isAuthenticated, isLoading, login, roomId, userId, userName } = authContext || {};
@@ -61,7 +62,7 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
 
     useEffect(() => {
         //TODO was passiert bei reload? soll karte ausgewählt bleiben?
-        if (roomId && userId ) {
+        if (roomId && userId) {
             socket.emit('placeCard', selectedCard, roomId, userId, userName); //TODO get room and user from context
         } else {
             console.error('No roomId found');
@@ -69,7 +70,12 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className }) => {
     }, [selectedCard]);
 
     return (
-        <div tabIndex={0} onKeyDown={handleKeyDown} className={`flex justify-start items-center overflow-auto p-2 ${className}`}>
+        <div
+            aria-disabled={!active} 
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className={`flex justify-start items-center overflow-auto p-2 ${(active ? "":"opacity-50 pointer-events-none")} ${className}`}
+        >
             {cards.map((card, index) => (
                 <Card
                     key={index}

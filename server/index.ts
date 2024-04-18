@@ -70,7 +70,8 @@ io.on('connection', (socket) => {
                 roomOwner: userId,
                 roomOwnerName: ownerName,
                 cards: [],
-                cardsVisible: false
+                cardsVisible: false,
+                votingActive: false
             }
             socket.emit('roomCreated', roomId);
             socket.join(roomId);
@@ -111,6 +112,16 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('cardsVisible', serverState.rooms[roomId].cardsVisible);
         } else {
             console.error('ERR:revealCards - room not found - roomId:', roomId);
+        }
+    })
+
+    socket.on('toggleVoting', (roomId: string, votingActive: boolean ) => {
+        console.debug('DBG:toggleVoting - roomId:', roomId, "votingActive:", votingActive)
+        if (serverState.rooms[roomId]) {
+            serverState.rooms[roomId].votingActive = votingActive;
+            io.to(roomId).emit('votingActive', serverState.rooms[roomId].votingActive);
+        } else {
+            console.error('ERR:toggleVoting - room not found - roomId:', roomId);
         }
     })
 
