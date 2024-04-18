@@ -13,7 +13,7 @@ interface CardData {
 interface CardDeckProps {
     className?: string;
     cards: CardData[];
-    active: boolean; 
+    active: boolean;
 }
 
 const CardDeck: React.FC<CardDeckProps> = ({ cards, className, active }) => {
@@ -23,6 +23,9 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className, active }) => {
 
     const handleCardSelect = (cardName: string) => {
         setSelectedCard(cardName);
+        if (cardName === "card_pause") {
+            socket.emit('toggleVoting', roomId, false);
+        }
     };
 
     useEffect(() => {
@@ -71,10 +74,12 @@ const CardDeck: React.FC<CardDeckProps> = ({ cards, className, active }) => {
 
     return (
         <div
-            aria-disabled={!active} 
+            aria-disabled={!active}
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            className={`flex justify-start items-center overflow-auto p-2 ${(active ? "":"opacity-50 pointer-events-none")} ${className}`}
+            className={`flex justify-start items-center overflow-auto p-2 
+                        ${(active ? "" : "opacity-50 pointer-events-none")} 
+                        ${className}`}
         >
             {cards.map((card, index) => (
                 <Card
