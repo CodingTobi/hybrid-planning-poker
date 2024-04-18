@@ -21,6 +21,7 @@ const SomePage: NextPage = () => {
   const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1' }]);
   const [revealCards, setRevealCards] = useState(false);
   const [votingActive, setVotingActive] = useState(false);
+  const [currentStory, setCurrentStory] = useState('Wecome to HPP');
   login();
 
   useEffect(() => {
@@ -53,6 +54,12 @@ const SomePage: NextPage = () => {
     setVotingActive(active);
   });
 
+  socket.on("updateStory", (story: string) => {
+    if (isRoomOwner) return;
+    console.log('updateStory', story);
+    setCurrentStory(story);
+  });
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center h-screen bg-slate-200 relative">
 
@@ -72,8 +79,12 @@ const SomePage: NextPage = () => {
               {(votingActive) ? "Stop Voting" : "Start Voting"}
             </button>
             <Link href="/spectator" target='_blank' className='bg-none text-center'> Open Spectator View in new Tab </Link>
+            <input type="text" value={currentStory} onChange={(e) => {
+              socket.emit("updateStory", roomId, e.target.value);
+              setCurrentStory(e.target.value);
+            }} />
           </>
-          : ""
+          : <p className='bg-none text-center'>{currentStory}</p>
         }
         <Image src={textureImage} alt="Texture" width={4096} height={4096} className="opacity-50" priority />
         <div className='absolute left-7 right-7 top-7 flex flex-wrap justify-between'>

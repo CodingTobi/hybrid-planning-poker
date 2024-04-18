@@ -125,6 +125,11 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('updateStory', (roomId: string, story: string) => {
+        console.debug('DBG:updateStory - roomId:', roomId, "story:", story)
+        io.to(roomId).emit('updateStory', story);
+    });
+
     socket.on('leaveRoom', (roomId: string) => {
         console.log('leaveRoom', roomId)
         socket.leave(roomId)
