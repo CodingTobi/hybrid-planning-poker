@@ -20,6 +20,7 @@ const SomePage: NextPage = () => {
 
   const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1' }]);
   const [revealCards, setRevealCards] = useState(false);
+  const [votingActive, setVotingActive] = useState(false);
   login();
 
   useEffect(() => {
@@ -47,6 +48,11 @@ const SomePage: NextPage = () => {
     setRevealCards(reveal);
   });
 
+  socket.on('votingActive', (active: boolean) => {
+    console.log('votingActive', active);
+    setVotingActive(active);
+  });
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center h-screen bg-slate-200 relative">
 
@@ -59,6 +65,11 @@ const SomePage: NextPage = () => {
               onClick={() => { socket.emit("revealCards", !revealCards, roomId) }}
               className='absolute bottom-0 left-[46%] bg-white rounded-md p-1 border border-black z-10'>
               {(revealCards) ? "Hide" : "Reveal"}
+            </button>
+            <button
+              onClick={() => { socket.emit("toggleVoting", roomId, !votingActive) }}
+              className='absolute bottom-0 left-[52%] bg-white rounded-md p-1 border border-black z-10'>
+              {(votingActive) ? "Stop Voting" : "Start Voting"}
             </button>
             <Link href="/spectator" target='_blank' className='bg-none text-center'> Open Spectator View in new Tab </Link>
           </>
@@ -82,7 +93,7 @@ const SomePage: NextPage = () => {
           )}
         </div>
       </div>
-      <CardDeck cards={cards_default} className='w-screen overflow-auto' />
+      <CardDeck active={votingActive} cards={cards_default} className='w-screen overflow-auto' />
     </div>
   );
 };

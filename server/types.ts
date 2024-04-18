@@ -12,6 +12,7 @@ export interface Room {
     roomOwnerName: string;
     cards: Card[];
     cardsVisible: boolean;
+    votingActive: boolean;
 }
 
 export interface ServerState {
