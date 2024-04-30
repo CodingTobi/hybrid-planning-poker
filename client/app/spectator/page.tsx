@@ -18,6 +18,7 @@ const SpectatorPage: NextPage = () => {
 
     const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1' }]);
     const [revealCards, setRevealCards] = useState(false);
+    const [currentStory, setCurrentStory] = useState('Wecome to HPP');
     login();
 
     useEffect(() => {
@@ -50,16 +51,23 @@ const SpectatorPage: NextPage = () => {
         };
     }, [router]);
 
+    socket.on("updateStory", (story: string) => {
+        console.log('updateStory', story);
+        setCurrentStory(story);
+    });
+
     return ( //TODO fix hardcoded link
         <div className="flex flex-col items-center justify-center w-full h-screen bg-slate-200 p-14 relative overflow-hidden">
-            <QrCode link={`http://192.168.2.159:3000/login?id=${roomId}`} buttonText='QR' qrDialogTitle='Join Room' className='bg-white rounded-md p-1 absolute right-2 top-2' />
+            <QrCode link={`http://192.168.2.176:3000/login?id=${roomId}`} buttonText='QR' qrDialogTitle='Join Room' className='bg-white rounded-md p-1 absolute right-2 top-2' />
+            <p className='text-4xl text-center p-3'>{currentStory}</p>
             <div className="w-full h-full bg-white shadow-lg border-2 border-gray-300 rounded-2xl overflow-hidden relative">
                 <Image src={textureImage} alt="Texture" layout="fill" objectFit="cover" className="opacity-50" priority />
-                <div className='absolute inset-8 flex flex-wrap justify-start items-start gap-4'>
+                <div className='absolute inset-8 flex flex-wrap justify-start items-start gap-8'>
                     {cards.map((card, index) => (
                         <div key={index} className=''>
-                            <p className='text-center'>{card.userName || card.placedBy.slice(0, 6)}</p>
+                            <p className='text-center text-2xl pb-1'>{card.userName || card.placedBy.slice(0, 6)}</p>
                             <Card
+                                className='scale-150'
                                 cardName={card.id}
                                 cardValue={revealCards ? cards_default.find((cardDef) => cardDef.cardName === card.id)?.cardValue || "e" : 'PP'}
                                 isSelected={false}

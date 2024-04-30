@@ -1,6 +1,7 @@
 export const cards_default = [ 
-    { cardName: 'card_0', cardValue: '0' },
-    { cardName: 'card_1', cardValue: '1' },
+  { cardName: 'card_0', cardValue: '0' },
+  { cardName: 'card_05', cardValue: '1/2' },
+  { cardName: 'card_1', cardValue: '1' },
     { cardName: 'card_2', cardValue: '2' },
     { cardName: 'card_3', cardValue: '3' },
     { cardName: 'card_5', cardValue: '5' },

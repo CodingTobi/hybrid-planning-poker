@@ -38,7 +38,6 @@ const LoginPage = () => {
         setSubmitting(true);
         try {
             await register(roomId, false, uname);
-            router.push(`/table`);
         } catch (error) {
             console.error("Failed to join room", error);
         } finally {
