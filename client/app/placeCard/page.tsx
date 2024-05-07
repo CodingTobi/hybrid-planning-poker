@@ -6,9 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from '@/contexts/AuthContext';
 
 
-export default function Test() {
+export default function PlaceCard() {
     const authContext = useAuth();
-    const { isAuthenticated, isLoading, login, roomId, userId } = authContext || {};
+    const { isAuthenticated, isLoading, login, roomId, userId, userName } = authContext || {};
     const cardId = useSearchParams().get("id");
     const router = useRouter();
 
@@ -21,7 +21,7 @@ export default function Test() {
                 console.error('Login failed! Please ask for the QR Code to login.', error);
             }
         } else if (isAuthenticated && cardId) {
-            socket.emit('placeCard', cardId, roomId, userId);
+            socket.emit('placeCard', cardId, roomId, userId, userName);
         }
     }, [cardId, isAuthenticated, isLoading, login, roomId, userId]);
 

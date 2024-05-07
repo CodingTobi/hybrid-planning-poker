@@ -67,7 +67,7 @@ const SpectatorPage: NextPage = () => {
                         <div key={index} className=''>
                             <p className='text-center text-2xl pb-1'>{card.userName || card.placedBy.slice(0, 6)}</p>
                             <Card
-                                className='scale-150'
+                                className='scale-150' //Todo use scale prop
                                 cardName={card.id}
                                 cardValue={revealCards ? cards_default.find((cardDef) => cardDef.cardName === card.id)?.cardValue || "e" : 'PP'}
                                 isSelected={false}

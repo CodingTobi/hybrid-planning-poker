@@ -26,6 +26,7 @@ serverState.rooms['room1'] = {
 
 const handleCardSelect = (card: Card, roomId: string) => {
     if (serverState.rooms[roomId]) {
+        if (!serverState.rooms[roomId].votingActive) return; // voting is not active, do nothing
         const existingCardIndex = serverState.rooms[roomId].cards.findIndex(c => c.placedBy === card.placedBy)
         if (existingCardIndex !== -1) {
             // user already placed a card, update it
