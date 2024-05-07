@@ -27,6 +27,7 @@ const SpectatorPage: NextPage = () => {
         }
         return () => {
             socket.emit('leaveRoom', roomId);
+            console.log('cleanup:leaveRoom', roomId);
         };
     }, [isAuthenticated, roomId]);
 

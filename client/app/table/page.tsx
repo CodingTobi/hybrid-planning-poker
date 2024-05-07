@@ -27,10 +27,11 @@ const SomePage: NextPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       socket.emit('joinRoom', roomId);
-      console.log('joinRoom', roomId);
+      console.log('tablepage:joinRoom', roomId);
     }
     return () => {
       socket.emit('leaveRoom', roomId);
+      console.log('tablepage:leaveRoom', roomId);
     };
   }, [isAuthenticated]);
 

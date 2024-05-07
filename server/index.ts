@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leaveRoom', (roomId: string) => {
-        console.log('leaveRoom', roomId)
+        console.log('DBG:leaveRoom - roomId', roomId)
         socket.leave(roomId)
     })
 
