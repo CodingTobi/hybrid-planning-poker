@@ -18,7 +18,7 @@ const SpectatorPage: NextPage = () => {
 
     const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1' }]);
     const [revealCards, setRevealCards] = useState(false);
-    const [currentStory, setCurrentStory] = useState('Wecome to HPP');
+    const [currentStory, setCurrentStory] = useState('Welcome to HPP');
     login();
 
     useEffect(() => {

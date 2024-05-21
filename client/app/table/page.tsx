@@ -21,7 +21,7 @@ const SomePage: NextPage = () => {
   const [cards, setCards] = useState([{ id: 'card_0', placedBy: 'testuser1', userName: 'testuser1' }]);
   const [revealCards, setRevealCards] = useState(false);
   const [votingActive, setVotingActive] = useState(false);
-  const [currentStory, setCurrentStory] = useState('Wecome to HPP');
+  const [currentStory, setCurrentStory] = useState('Welcome to HPP');
   login();
 
   useEffect(() => {
@@ -63,29 +63,38 @@ const SomePage: NextPage = () => {
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center h-screen bg-slate-200 relative">
+      {(isRoomOwner) ?
+        <div className='absolute h-[70%] right-1 w-36 flex flex-col gap-2 rounded-md bg-opacity-50 bg-amber-900 border border-black'>
+          <h1 className="text-lg text-center">Einstellungen</h1>
 
+          <Link href="/spectator" target='_blank' className='text-center bg-white rounded-md p-1 border border-black z-10'>
+            Präsenz Ansicht
+            </Link>
 
-      <QrCode link={`http://192.168.2.176:3000/login?id=${roomId}`} buttonText='QR' qrDialogTitle='Join Room' className=' bg-white rounded-md p-1 inset-2 absolut right-2 top-2' />
+          <QrCode link={`http://192.168.2.176:3000/login?id=${roomId}`} buttonText='QR Code' qrDialogTitle='Join Room' className=' bg-white rounded-md p-1 inset-2 absolut right-2 top-2' />
+        </div>
+        : null}
       <div className="w-1/2 h-1/2 bg-white shadow-lg border-2 border-gray-300 rounded-2xl overflow-hidden relative">
         {(isRoomOwner) ?
           <>
-            <button
-              onClick={() => { socket.emit("revealCards", !revealCards, roomId) }}
-              className='absolute bottom-0 left-[20%] bg-white rounded-md p-1 border border-black z-10'>
-              {(revealCards) ? "Hide Cards" : "Reveal Cards"}
-            </button>
-            <button
-              onClick={() => { socket.emit("toggleVoting", roomId, !votingActive) }}
-              className='absolute bottom-0 left-[60%] bg-white rounded-md p-1 border border-black z-10'>
-              {(votingActive) ? "Stop Voting" : "Start Voting"}
-            </button>
-            <button
-              onClick={() => { socket.emit("clearCards", roomId) }}
-              className='absolute bottom-0 left-[3%] bg-white rounded-md p-1 border border-black z-10'>
-              Clear Cards 
-            </button>
-            <Link href="/spectator" target='_blank' className='bg-none text-center'> Open Spectator View in new Tab </Link>
-            <input type="text" value={currentStory} onChange={(e) => {
+            <div className='absolute bottom-0 w-full flex justify-evenly'>
+              <button
+                onClick={() => { socket.emit("revealCards", !revealCards, roomId) }}
+                className='bg-white rounded-md p-1 border border-black z-10'>
+                {(revealCards) ? "Karten umdrehen" : "Karten zeigen"}
+              </button>
+              <button
+                onClick={() => { socket.emit("toggleVoting", roomId, !votingActive) }}
+                className='bg-white rounded-md p-1 border border-black z-10'>
+                {(votingActive) ? "Abstimmung beenden" : "Abstimmung starten"}
+              </button>
+              <button
+                onClick={() => { socket.emit("clearCards", roomId) }}
+                className='bg-white rounded-md p-1 border border-black z-10'>
+                Karten entfernen
+              </button>
+            </div>
+            <input className="text-center border border-black w-[90%] mx-[5%]" type="text" value={currentStory} onChange={(e) => {
               socket.emit("updateStory", roomId, e.target.value);
               setCurrentStory(e.target.value);
             }} />
@@ -110,7 +119,7 @@ const SomePage: NextPage = () => {
           )}
         </div>
       </div>
-      <CardDeck active={votingActive} cards={cards_default} className='w-screen overflow-auto' />
+      <CardDeck active={votingActive} cards={cards_default} className='w-fit max-w-full overflow-auto' />
     </div>
   );
 };
