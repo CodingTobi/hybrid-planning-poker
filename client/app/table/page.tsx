@@ -71,13 +71,18 @@ const SomePage: NextPage = () => {
           <>
             <button
               onClick={() => { socket.emit("revealCards", !revealCards, roomId) }}
-              className='absolute bottom-0 left-[46%] bg-white rounded-md p-1 border border-black z-10'>
-              {(revealCards) ? "Hide" : "Reveal"}
+              className='absolute bottom-0 left-[20%] bg-white rounded-md p-1 border border-black z-10'>
+              {(revealCards) ? "Hide Cards" : "Reveal Cards"}
             </button>
             <button
               onClick={() => { socket.emit("toggleVoting", roomId, !votingActive) }}
-              className='absolute bottom-0 left-[52%] bg-white rounded-md p-1 border border-black z-10'>
+              className='absolute bottom-0 left-[60%] bg-white rounded-md p-1 border border-black z-10'>
               {(votingActive) ? "Stop Voting" : "Start Voting"}
+            </button>
+            <button
+              onClick={() => { socket.emit("clearCards", roomId) }}
+              className='absolute bottom-0 left-[3%] bg-white rounded-md p-1 border border-black z-10'>
+              Clear Cards 
             </button>
             <Link href="/spectator" target='_blank' className='bg-none text-center'> Open Spectator View in new Tab </Link>
             <input type="text" value={currentStory} onChange={(e) => {

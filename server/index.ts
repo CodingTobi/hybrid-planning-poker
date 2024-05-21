@@ -106,6 +106,16 @@ io.on('connection', (socket) => {
         handleCardSelect(card, roomId)
     });
 
+    socket.on('clearCards', (roomId: string) => {
+        console.debug('DBG:clearCards - roomId:', roomId)
+        if (serverState.rooms[roomId]) {
+            serverState.rooms[roomId].cards = [];
+            io.to(roomId).emit('cardsUpdated', serverState.rooms[roomId].cards);
+        } else {
+            console.error('ERR:clearCards - room not found - roomId:', roomId);
+        }
+    });
+
     socket.on('revealCards', (reveal: boolean, roomId: string) => {
         console.debug('DBG:revealCards - roomId:', roomId)
         if (serverState.rooms[roomId]) {
