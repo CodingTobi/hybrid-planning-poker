@@ -28,13 +28,18 @@ To get started with the project, follow these steps:
     pnpm install
     ```
 
-4. Run the development server:
+4. Run the development server (clientside):
     ```bash
     npm run dev
     # or
     yarn dev
     # or
     pnpm dev
+    ```
+
+    The run the Server with:
+    ```bash
+    npm run server
     ```
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
