@@ -53,6 +53,9 @@ const SomePage: NextPage = () => {
   socket.on('votingActive', (active: boolean) => {
     console.log('votingActive', active);
     setVotingActive(active);
+    if (!active) {
+      alert('Voting beendet'); //TODO implement cleaner solution which destinguishes between the pause card or the start/stop button
+    }
   });
 
   socket.on("updateStory", (story: string) => {
