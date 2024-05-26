@@ -15,8 +15,11 @@ const Navbar = () => {
         >
             <div className="flex flex-col justify-between items-center">
                 <div className="text-xl font-bold">
-                    <Link href="/">
-                        MySite
+                    <Link className="hidden md:block" href="/">
+                        Hybrid Planning Poker
+                    </Link>
+                    <Link className="md:hidden" href="/">
+                        HPP
                     </Link>
                 </div>
                 <div className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -24,25 +27,25 @@ const Navbar = () => {
                 </div>
             </div>
             <div className={`mt-2 transition ${isOpen ? 'block' : 'hidden'} md:block`}>
-                <ul className="space-y-2 md:flex md:gap-6 md:items-center">
+                <ul className="space-y-2 md:flex md:px-2 md:gap-6 md:items-center">
                     <li>
-                        <Link href="/" className="text-gray-700 hover:text-blue-600">
+                        <Link href="/" className="text-black hover:bg-gray-500 rounded-md p-1">
                             Home
                         </Link>
                     </li>
                     <li>
-                        <Link href="/login" className="text-gray-700 hover:text-blue-600">
-                            login
+                        <Link href="/login" className="text-black hover:bg-gray-500 rounded-md p-1">
+                            Login
                         </Link>
                     </li>
                     <li>
-                        <Link href="/new" className="text-gray-700 hover:text-blue-600">
-                            new
+                        <Link href="/new" className="text-black hover:bg-gray-500 rounded-md p-1">
+                            Neuer Raum
                         </Link>
                     </li>
                     <li>
-                        <Link href="/table" className="text-gray-700 hover:text-blue-600">
-                            table
+                        <Link href="/table" className="text-black hover:bg-gray-500 rounded-md p-1">
+                            Hauptseite
                         </Link>
                     </li>
                     {/* <li>
@@ -50,16 +53,18 @@ const Navbar = () => {
                             Test2
                         </Link>
                     </li> */}
-                    <li>
+                    {/* <li>
                         <Link href="/placeCard?id=card_0" className="text-gray-700 hover:text-blue-600">
                             Place Card
                         </Link>
-                    </li>
+                    </li> */}
                     {/* <li>
                         <Link href="/testReg" className="text-gray-700 hover:text-blue-600">
                             test register
                         </Link>
-                    </li> */}
+                    </li> */
+              
+                    }
                 </ul>
             </div>
         </nav>
